@@ -1,0 +1,166 @@
+Pratical Infrastructure as Code
+You might boil the ocean, but you'll definatly kill everyone trying.
+19:00 27 Oct 2015
+Tags: foo, bar, baz
+
+Matthew Stone
+Technical Lead, Brocade Communications
+matt@oceanbottle.net
+http://matthewstone.net/
+@bigmstone
+
+* 
+.image images/fip.jpg
+
+* 
+.image images/pg.png
+
+* Pratical Infrastructure as Code
+.image images/overview.png
+
+* Pratical Infrastructure as Code
+.image images/src-overview.png
+
+* Source & Revison Control - Tooling
+- Git
+- SVN
+- Mercurial
+- Gerrit
+- Phabricator
+
+* Source & Revision Control - Revision Control
+.image images/git.png 575 _
+
+* Source & Revision Control - Peer Review
+.image images/phab.png 575 _
+
+* Source & Revision Control - Source & Syntax
+- Templates
+- Abstractions/DSL
+
+* Source & Revision Control - Source & Syntax
+ ---
+ - name: Configure MLX VRF
+ hosts: all
+ gather_facts: no
+ connection: local
+ tasks:
+     - name: Configure VRF
+       mlx_vrf:
+           host={{ inventory_hostname }}
+           user={{ user }}
+           passwd={{ passwd }}
+           vrf_name={{ vrf_name }}
+           rd={{ rd }}
+           import_rt={{ import_rt }}
+           export_rt={{ export_rt }}
+           ip_routes={{ ip_routes }}
+
+* Source & Revision Control - Source & Syntax
+ ---
+ vrf_name: test1
+ rd: 15
+ import_rt: 15
+ export_rt: 15
+ ip_routes:
+     - route: 10.10.10.0/24
+     gateway: 10.2.2.1
+     - route: 10.11.10.0/24
+     gateway: 10.2.2.1
+     - route: 10.12.10.0/24
+     gateway: 10.2.2.1
+
+* Source & Revision Control - Source & Syntax
+ vrf CUST:{{ name }}
+   rd 30614:{{ rd }}
+   address-family ipv4
+     route-target export 30614:{{ exp-rt }}
+     route-target import 30614:{{ imp-rt }}
+     {% for route in routes %}
+     ip route {{ route.prefix }}/{{ route.mask }} {{ route.gw }}
+     {% endfor %}
+   exit-address-family
+ exit-vrf
+
+* Pratical Infrastructure as Code
+.image images/btv-overview.png
+
+* Build, Test, & Validate - Tools
+- Jenkins
+- Travis CI
+- ParallelCI
+- ServerSpec
+
+* Build, Test, & Validate - ServerSpec
+ require 'spec_helper'
+ 
+ describe interface('swp2') do
+   it { should exist }
+   it { should have_ipv4_address('172.16.2.4') }
+ end
+ 
+ describe bridge('bridge0') do
+   it { should exist }
+   it { should have_interface('swp38') }
+   it { should have_interface('swp39') }
+ end
+ 
+ describe routing_table do
+   it do
+     should have_entry(
+       :destination => '172.16.2.0/24',
+       :interface => 'swp2'
+     )
+   end
+ end
+
+* Build, Test, & Validate - State of the Union
+- This needs work!
+- Contact me - seriously.
+
+* Pratical Infrastructure as Code
+.image images/dep-overview.png
+
+* Deploy - Tools
+- Ansible
+- Puppet
+- Chef
+- Expect
+- Neutron
+
+* Deploy - Strategy
+- Rolling Updates/Load Draining
+- Scheduling
+
+* Deploy - Ansible
+.image images/ansible.png _ 1000
+
+* Pratical Infrastructure as Code
+.image images/mr-overview.png
+
+* Monitoring & Remediation - Tools
+- Sensu
+- InfluxDB/Grafana
+- Fluentd/Logstash
+- Elastic Search/Kibana
+- StackStorm
+
+* Monitoring & Remediation - InfluxDB/Grafana
+.image images/grafana.png _ 1000
+
+* Monitoring & Remediation - InfluxDB/Grafana
+.image images/grafana_netflix.png _ 1000
+
+* Monitoring & Remediation - Kibana
+.image images/kibana.png _ 1000
+
+* Monitoring & Remediation - StackStorm
+.image images/stackstorm.png _ 1000
+
+* Future Example/Demo
+.image images/topology.png
+
+* Future Example/Demo
+- Phabricator
+- Travis CI
+- Sensu/InfluxDB/Grafana
